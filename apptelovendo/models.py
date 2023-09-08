@@ -39,8 +39,10 @@ class Pedido(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADOS)
     usuario = models.ForeignKey(CustomUser, on_delete=models.CASCADE, default=None, related_name='pedidos')
     asignado_a = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, blank=True, null=True, related_name='pedidos_asinados')
-
+    despacho = models.CharField(max_length=250, blank=True, null=True)
+    
 class DetallePedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
+    

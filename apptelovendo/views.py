@@ -89,6 +89,7 @@ def verPedidos(request):
             send_notification_email(pedido, nuevo_estado)
         
     pedidos = Pedido.objects.all().order_by('id')
+    
     return render(request, 'apptelovendo/verPedidos.html', {'pedidos':pedidos})
 
 #Envio de actualizacion de pedidos
@@ -103,7 +104,7 @@ def send_notification_email(pedido, nuevo_estado):
 def detalle_pedido(request, pedido_id):
     pedido = Pedido.objects.get(id=pedido_id)
     detalles = pedido.detallepedido_set.all()
-    return render(request, 'apptelovendo/detalle_pedido.html', {'pedido': pedido, 'detalles': detalles })  
+    return render(request, 'apptelovendo/detalle_pedido.html', {'pedido': pedido, 'detalles': detalles, })  
 
 def tomar_pedido(request):
     CustomUser = get_user_model()

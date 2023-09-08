@@ -22,7 +22,7 @@
                         <td>{{usuario.nombre_completo}}</td>
 
                         <td>
-                            {% for pedido in usuarios.peidos %}
+                            {% for pedido in usuarios.pedidos %}
                                 {% if pedido.usuario == usuario%}
                                     {{pedido.get_estado_display}}
                                 {% endif %}
