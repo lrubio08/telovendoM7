@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import RegistroForm
+from .forms import RegistroForm, PedidoForm
 import random
 import string
 from django.core.mail import send_mail
@@ -105,7 +105,7 @@ def detalle_pedido(request, pedido_id):
     pedido = Pedido.objects.get(id=pedido_id)
     detalles = pedido.detallepedido_set.all()
     return render(request, 'apptelovendo/detalle_pedido.html', {'pedido': pedido, 'detalles': detalles, })  
-
+'''
 def tomar_pedido(request):
     CustomUser = get_user_model()
     if request.method == 'POST':
@@ -125,3 +125,22 @@ def tomar_pedido(request):
 
     return render(request, 'apptelovendo/tomar_pedido.html',{'usuarios':usuarios, 'usuarios_con_pedidos_pendientes': usuarios_con_pedidos_pendientes})
 
+'''
+
+
+def tomar_pedido(request):
+    if request.method == 'POST':
+        print("entrando...")
+        form = PedidoForm(request.POST)
+        print("que trae:", form)
+        if form.is_valid():
+            form.save()
+            return redirect('pedidos')
+    
+    else:
+        form = PedidoForm()
+    return render (request,'apptelovendo/tomar_pedido.html/',{'form':form})
+
+def pedidos(request):
+    pedidos = DetallePedido.objects.all()
+    return render(request, 'apptelovendo/pedidos.html', {'pedidos': pedidos})
