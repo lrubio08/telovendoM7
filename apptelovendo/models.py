@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
 class CustomUser(AbstractUser):
     rut = models.CharField(max_length=20, unique=True)
@@ -56,4 +58,37 @@ class DetallePedido(models.Model):
         datos = "Producto: " + self.producto.nombre
         return datos
     
+class NumeroPedidoUtilizado(models.Model):
+    numero_pedido = models.CharField(max_length=10, unique=True)
+
+    def __str__(self):
+        return self.numero_pedido
     
+class PedidoCliente(models.Model):
+    cliente = models.CharField(max_length=100, blank=True, null=True)
+    direccion_entrega = models.CharField(max_length=250)
+    fecha_pedido = models.DateField()
+    forma_pago = models.CharField(max_length=100)
+    numero_pedido = models.CharField(max_length=10, unique=True, editable=False)
+    cantidad = models.PositiveIntegerField(default=1)
+    productos = models.ManyToManyField(Producto)
+
+
+    def generar_numero_pedido(self):
+        ultimo_pedido = NumeroPedidoUtilizado.objects.order_by('-id').first()
+        if ultimo_pedido:
+            ultimo_numero = int(ultimo_pedido.numero_pedido.split('-')[1])
+            nuevo_numero = str(ultimo_numero + 1).zfill(3)
+        else:
+            nuevo_numero = "001"
+        self.numero_pedido = f"PED-{nuevo_numero}"
+
+    def __str__(self):
+        return str(self.numero_pedido)
+    
+@receiver(pre_save, sender=PedidoCliente)
+def actualizar_numero_pedido(sender, instance, **kwargs):
+    if not instance.numero_pedido:
+        instance.generar_numero_pedido()
+        numero_pedido_utilizado =NumeroPedidoUtilizado(numero_pedido=instance.numero_pedido)
+        numero_pedido_utilizado.save()

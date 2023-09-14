@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import RegistroForm, PedidoForm
+from .forms import RegistroForm, PedidoForm, PedidoClienteForm
 import random
 import string
 from django.core.mail import send_mail
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .models import Pedido, DetallePedido, CustomUser
+from .models import Pedido, DetallePedido, PedidoCliente,Producto, CustomUser
 from django.contrib.auth import get_user_model
 
 #pagina de inicio
@@ -68,7 +68,7 @@ def iniciar_sesion(request):
             if user.is_staff or user.is_superuser:
                 return redirect ('verPedidos')
             else:
-                return redirect('sesion_iniciada')
+                return redirect('realizar_pedido')
         else:
             messages.error(request, 'Tu correo o contraseñas no son correctos. Por favor intenta nuevamente.')
     return render(request, 'apptelovendo/login.html')
@@ -130,9 +130,7 @@ def tomar_pedido(request):
 
 def tomar_pedido(request):
     if request.method == 'POST':
-        print("entrando...")
         form = PedidoForm(request.POST)
-        print("que trae:", form)
         if form.is_valid():
             form.save()
             return redirect('pedidos')
@@ -144,3 +142,26 @@ def tomar_pedido(request):
 def pedidos(request):
     pedidos = DetallePedido.objects.all()
     return render(request, 'apptelovendo/pedidos.html', {'pedidos': pedidos})
+
+def categorias(request):
+    return render(request,'apptelovendo/categorias.html')
+
+def realizar_pedido(request):
+    if request.method == 'POST':
+        form = PedidoClienteForm(request.POST)
+        if form.is_valid():
+            pedido = form.save(commit=False)
+            pedido.save()
+            form.save_m2m()
+            return redirect('mis_pedidos')
+    
+    else:
+        form = PedidoClienteForm()
+    return render(request, 'apptelovendo/realizar_pedido.html', {'form':form})
+
+def mis_pedidos(request):
+    pedidos = PedidoCliente.objects.all()
+    productos = Producto.objects.all()
+    for producto in productos:
+        print(producto.nombre, producto.precio)
+    return render(request, 'apptelovendo/mis_pedidos.html', {'pedidos':pedidos, 'productos': productos})
