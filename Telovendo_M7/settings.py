@@ -141,4 +141,4 @@ SESSION_COOKIE_AGE= 3600 # 1 HORA EN SEGNDOS
 SESSION_CO0KIE_DOMAIN = 'ejemplo.com' # parametro determina el dominio donde se aplican las cookies de sesion
 SESSION_COOKIE_SECURE = True # controla si las cokies se envian solo atraves de conexciones HTTPS, por defecto es False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # por defecto las sesiones no expiran (Flase) en true las sesiones expiraran al cerrar el navegador
-SESSION_SAVE_EVERY_REQUEST = True # Si se desea guradar las sesiones en cada solicitud se configura en True , por defecto es False 
+SESSION_SAVE_EVERY_REQUEST = True # Si se desea guradar las sesiones en cada solicitud se configura en True , por defecto es False

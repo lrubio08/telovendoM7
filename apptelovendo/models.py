@@ -49,7 +49,7 @@ class NumeroPedidoUtilizado(models.Model):
 
     def __str__(self):
         return self.numero_pedido
-    
+
 class Pedido(models.Model):
     ESTADOS = (
         ('pendiente', 'Pendiente'),
@@ -69,7 +69,6 @@ class Pedido(models.Model):
 
     def __str__(self):
         return self.estado
-    
 class PedidoCliente(models.Model):
     cliente = models.CharField(max_length=100, blank=True, null=True)
     direccion_entrega = models.CharField(max_length=250)
@@ -78,12 +77,16 @@ class PedidoCliente(models.Model):
     numero_pedido = models.CharField(max_length=10, unique=True, editable=False)
     cantidad = models.PositiveIntegerField(default=1)
     productos = models.ManyToManyField(Producto)
+
     estado = models.ForeignKey(Pedido,blank=True, null=True,  on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
         if not self.estado:
             self.estado = Pedido.objects.get(estado='pendiente')
         super(PedidoCliente, self).save(*args, **kwargs)
+
+
+
 
     def generar_numero_pedido(self):
         ultimo_pedido = NumeroPedidoUtilizado.objects.order_by('-id').first()
@@ -102,12 +105,12 @@ def actualizar_numero_pedido(sender, instance, **kwargs):
     if not instance.numero_pedido:
         instance.generar_numero_pedido()
         numero_pedido_utilizado =NumeroPedidoUtilizado(numero_pedido=instance.numero_pedido)
+
         numero_pedido_utilizado.save()
 
 class HistorialPedido(models.Model):
     pedido = models.ForeignKey(PedidoCliente, on_delete=models.CASCADE)
     estado = models.CharField(max_length=20)
     estado_actual = models.CharField(max_length=20, blank=True, null=True)
-    
     
 
