@@ -143,9 +143,11 @@ def realizar_pedido(request):
 def mis_pedidos(request):
     pedidos = PedidoCliente.objects.all()
     productos = Producto.objects.all()
-    if request.method == 'POST':
-        pedido = PedidoCliente.objects.all()
-        pedido.estado = 'cancelado'
-        pedido.save()
-        return redirect(request, 'mis_pedidos')
+    
     return render(request, 'apptelovendo/mis_pedidos.html', {'pedidos':pedidos, 'productos': productos})
+
+def cancelar_pedido(request, pedido_id):
+    pedido = Pedido.objects.get(id=pedido_id)
+    pedido.estado = 'cancelado'
+    pedido.save()
+    return redirect('mis_pedidos')

@@ -48,7 +48,8 @@
                             <td>{{ pedido.numero_pedido }}</td>
                             <td>{{ pedido.estado }}</td>                           
                             <td>
-                                <form action="" method="POST">
+                                <form action="{% url 'cancelar_pedido' pedido.id%}" method="POST">
+                                    {% csrf_token%}
                                     <a href="{% url 'mis_pedidos'%}" class="btn btn-danger">Cancelar Pedido</a>
                                 </form>
                             </td>

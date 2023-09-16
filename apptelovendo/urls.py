@@ -16,6 +16,6 @@ urlpatterns = [
     path('categorias/',views.categorias, name='categorias'),
     path('realizar_pedido/', views.realizar_pedido, name='realizar_pedido'),
     path('mis_pedidos/', views.mis_pedidos, name='mis_pedidos'),
-    #path('cancelar_pedido/<int:pedido_id>', views.cancelar_pedido, name='cancelar_pedido')
+    path('cancelar_pedido/<int:pedido_id>/', views.cancelar_pedido, name='cancelar_pedido')
     
 ]

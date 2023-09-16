@@ -77,7 +77,6 @@ class PedidoCliente(models.Model):
     numero_pedido = models.CharField(max_length=10, unique=True, editable=False)
     cantidad = models.PositiveIntegerField(default=1)
     productos = models.ManyToManyField(Producto)
-
     estado = models.ForeignKey(Pedido,blank=True, null=True,  on_delete=models.CASCADE)
 
     def save(self, *args, **kwargs):
